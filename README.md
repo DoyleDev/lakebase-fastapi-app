@@ -1,11 +1,19 @@
-# 🚕 FastAPI Taxi Data Application
+# 🌊 Lakebase FastAPI Databricks App.
 
-A production-ready FastAPI application for accessing taxi trip data stored in Databricks SQL Warehouses. Features scalable architecture, automatic token refresh, and optimized database connection management.
+A production-ready FastAPI application for accessing Databricks Lakebase data. Features scalable architecture, automatic token refresh, and optimized database connection management.
+
+## ❓ Why do you need an api? 
+- **Database Abstraction & Security**:  APIs prevent direct database access and provide controlled access through authenticated apps. 
+- **Standardized Access Patterns**: APIs create consistent ways to interact with data across different teams and applications. 
+- **Development Velocity**:   APIs reduce duplicate code in applications. Write your api logic once and let applications leverage your endpoint.
+- **Performance Optimization & Caching**:  APIs leverage connection pooling, query optimization, and results caching for high performance workloads.
+- **Cross Platform Capability**: Any programming language can leverage the REST protocol. 
+- **Audit Trails & Monitoring**: Custom logging, request tracking, and usage analytics give visibility into data access.
+- **Future Proof**:  APIs simplify switching between databases, adding new data sources, or changing infrastructure.
 
 ## 🌟 Features
-
 - **FastAPI REST API** with async/await support
-- **Databricks SQL Warehouse Integration** with OAuth token management
+- **Databricks Lakebase Integration** with OAuth token management
 - **Automatic Token Refresh** with configurable intervals
 - **Production-Ready Architecture** with domain-driven design
 - **Connection Pooling** with optimized settings for high-traffic scenarios
@@ -13,8 +21,7 @@ A production-ready FastAPI application for accessing taxi trip data stored in Da
 - **Comprehensive Error Handling** and logging
 
 ## 📋 Prerequisites
-
-- **Databricks Workspace** with SQL Warehouse access
+- **Databricks Workspace**: Permissions to create apps and database instances
 - **Database Instance** configured in Databricks
 - **Python 3.11+** and uv package manager
 - **Environment Variables** configured (see Configuration section)
@@ -25,8 +32,11 @@ A production-ready FastAPI application for accessing taxi trip data stored in Da
 
 1. **Clone and install dependencies:**
    ```bash
-   uv sync
+   git clone https://github.com/DoyleDev/lakebase-fastapi-app.git
    uv pip install -r requirements.txt
+   uv add -r requirements.txt
+   uv venv
+   source .venv/bin/activate
    ```
 
 2. **Configure environment variables:**
@@ -46,40 +56,49 @@ A production-ready FastAPI application for accessing taxi trip data stored in Da
 
 ### Databricks Apps Deployment
 
-1. **Deploy using Databricks CLI:**
+1. **Databricks UI: Create Custom App:**
+
+2. **Databricks UI: App Database Instance Permissions:**
+   - Copy App Service Principal Id from App -> Authorization
+   - Compute -> Database Instances -> Your Instance -> Permissions
+   - Grant App Service Principal the proper permissions on your instance.
+   - Grant App Service Principal permissions to the Postgres Catalog.
+
+3. **Configure environment variables in app.yaml:**
+
+   #### ⚙️ Configuration
+
+   ### Required Environment Variables
+
+   | Variable | Description | Example |
+   |----------|-------------|---------|
+   | `DATABRICKS_DATABASE_INSTANCE` | Database instance name | `my-database-instance` |
+   | `DATABRICKS_DATABASE_NAME` | Database name | `database` |
+   | `DATABRICKS_HOST` | Workspace URL (for apps) | `https://workspace.cloud.databricks.com` |
+   | `DATABRICKS_TOKEN` | Access token (for local apps) | `dapi...` |
+   | `DATABRICKS_CLIENT_ID` | OAuth client ID (for apps) | `app_client_id` |
+   | `DEFAULT_POSTGRES_SCHEMA` | Database schema | `public` |
+   | `DEFAULT_POSTGRES_TABLE` | Table name | `nyc_train_synced` |
+
+   ### Optional Configuration
+
+   | Variable | Default | Description |
+   |----------|---------|-------------|
+   | `DB_POOL_SIZE` | `5` | Connection pool size |
+   | `DB_MAX_OVERFLOW` | `10` | Max overflow connections |
+   | `DB_POOL_TIMEOUT` | `30` | Pool checkout timeout (seconds) |
+   | `DB_COMMAND_TIMEOUT` | `10` | Query timeout (seconds) |
+
+4. **Deploy app files using Databricks CLI:**
    ```bash
-   databricks bundle deploy
+   databricks sync --watch . /Workspace/Users/<your_username>/<project_folder>
    ```
+5. **Databricks UI: Deploy Application:**
+   - App -> Deploy
+   - Source code path = /Workspace/Users/<your_username>/<project_folder> - source code path is at the project root where app.yaml lives. 
+   - View logs for successful deploy: src.main - INFO - Application startup initiated
+   - View your API docs: <your_app_url>/docs
 
-2. **Configure environment variables in app.yaml:**
-   ```yaml
-   env:
-     - name: 'DATABRICKS_DATABASE_INSTANCE'
-       value: 'your-database-instance-name'
-     - name: 'DATABRICKS_DATABASE_NAME'  
-       value: 'your-database-name'
-   ```
-
-## ⚙️ Configuration
-
-### Required Environment Variables
-
-| Variable | Description | Example |
-|----------|-------------|---------|
-| `DATABRICKS_DATABASE_INSTANCE` | Database instance name | `my-warehouse-instance` |
-| `DATABRICKS_DATABASE_NAME` | Database name | `taxi_data` |
-| `DATABRICKS_HOST` | Workspace URL (for apps) | `https://workspace.cloud.databricks.com` |
-| `DATABRICKS_TOKEN` | Access token (for apps) | `dapi...` |
-| `DATABRICKS_CLIENT_ID` | OAuth client ID | `token` |
-
-### Optional Configuration
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `DB_POOL_SIZE` | `5` | Connection pool size |
-| `DB_MAX_OVERFLOW` | `10` | Max overflow connections |
-| `DB_POOL_TIMEOUT` | `30` | Pool checkout timeout (seconds) |
-| `DB_COMMAND_TIMEOUT` | `10` | Query timeout (seconds) |
 
 ## 🏗️ Architecture
 
@@ -89,34 +108,34 @@ src/
 ├── core/
 │   └── database.py          # Database connection with automatic token refresh
 ├── models/
-│   ├── base.py             # SQLAlchemy base model
-│   └── taxi.py             # Taxi trip model
+│   └── taxi.py             # Taxi trip model using sqlModel
 ├── routers/
 │   └── taxi.py             # API endpoints
-├── schemas/
-│   └── taxi.py             # Pydantic schemas
 ├── services/
 │   └── taxi_service.py     # Business logic (optional)
 └── main.py                 # FastAPI application
 ```
 
 ### Database Connection Strategy
+**Important Note:** OAuth tokens expire after one hour, but expiration is enforced only at login. Open connections remain active even if the token expires. However, any PostgreSQL command that requires authentication fails if the token has expired.  Read More: https://docs.databricks.com/aws/en/oltp/oauth
 
 **Automatic Token Refresh:**
-- 55-minute connection recycling with `pool_recycle=3300`
-- Fresh token generation for each new connection
+- 50 Minute token refresh with background async task that does not impact requests.
 - Guaranteed token refresh before expiry (safe for 1-hour token lifespans)
 - Optimized for high-traffic production applications
 
 ## 📚 API Documentation
 
-### Endpoints
+### Example Endpoints
 
 | Endpoint | Method | Description |
 |----------|--------|-------------|
 | `/trips/count` | GET | Get total trip count |
 | `/trips/sample` | GET | Get 5 random trip IDs |
 | `/trips/{trip_id}` | GET | Get trip by ID |
+| `/trips/analytics` | GET | Get high level stats using services |
+| `/trips/pages` | GET | Page-based pagination (traditional) |
+| `/trips/stream` | GET | Cursor-based pagination (high performance) |
 
 ### Example Requests
 
@@ -127,8 +146,11 @@ curl http://localhost:8000/trips/count
 # Get specific trip
 curl http://localhost:8000/trips/123
 
-# Test alternative database connection
-curl http://localhost:8000/trips/simple/123
+# Get paginated trips
+curl "http://localhost:8000/trips/pages?page=1&page_size=10"
+
+# Get cursor-based trips
+curl "http://localhost:8000/trips/stream?cursor=0&page_size=10"
 ```
 
 ### Response Format
@@ -154,14 +176,7 @@ For applications handling thousands of requests per minute:
    DB_MAX_OVERFLOW=50
    ```
 
-2. **Use simple database approach** for predictable token refresh
-3. **Monitor connection pool metrics** in application logs
-
-### Token Refresh Optimization
-
-- **Standard approach**: Best for low-medium traffic
-- **Simple approach**: Best for high-traffic with predictable refresh needs
-- **Custom intervals**: Adjust `pool_recycle` based on token lifespan
+2. **Monitor connection pool metrics** in application logs
 
 ## 🛡️ Security
 
@@ -183,21 +198,11 @@ For applications handling thousands of requests per minute:
 
 ```
 # Token refresh events
-"Refreshing PostgreSQL OAuth token via event handler"
-"Simple DB: Generating fresh PostgreSQL OAuth token"
+"Background token refresh: Generating fresh PostgreSQL OAuth token"
+"Background token refresh: Token updated successfully"
 
 # Performance tracking
-"Request: GET /trips/123 - 12.3ms"
-```
-
-## 🧪 Testing
-
-```bash
-# Run local tests
-uv run pytest
-
-# Load testing
-for i in {1..100}; do curl http://localhost:8000/trips/sample; done
+"Request: GET /trips/123 - 8.3ms"
 ```
 
 ## 🚨 Troubleshooting
@@ -207,10 +212,6 @@ for i in {1..100}; do curl http://localhost:8000/trips/sample; done
 **"Resource not found" on startup:**
 - Verify `DATABRICKS_DATABASE_INSTANCE` exists in workspace
 - Check database instance permissions
-
-**High latency on first requests:**
-- Expected behavior during token generation
-- Monitor for "Generating fresh PostgreSQL OAuth token" logs
 
 **Connection timeouts:**
 - Increase `DB_COMMAND_TIMEOUT` for slow queries
