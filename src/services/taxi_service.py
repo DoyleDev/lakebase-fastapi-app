@@ -60,7 +60,6 @@ class TaxiService:
 
     async def _find_peak_hour(self, db: AsyncSession) -> tuple[int, int]:
         """Find the hour with the most trips."""
-        # Use raw SQL for hour extraction from text columns
         stmt = text("""
             SELECT
                 EXTRACT(hour FROM pickup_datetime::timestamp) as hour,
@@ -103,7 +102,6 @@ class TaxiService:
         if not existing_trip:
             raise ValueError(f"Trip with ID {trip_id} not found")
 
-        # Update the vendor ID in the WRITABLE table
         update_stmt = (
             update(TaxiTrip)
             .where(TaxiTrip.id == trip_id)
@@ -123,7 +121,6 @@ class TaxiService:
         )
 
 
-# Dependency injection function
 async def get_taxi_service() -> TaxiService:
     """Dependency injection for TaxiService."""
     return TaxiService()
