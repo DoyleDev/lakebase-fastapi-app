@@ -2,11 +2,16 @@ command: ["uvicorn", "src.main:app"]
 
 env:
   - name: 'DATABRICKS_DATABASE_INSTANCE'
-    value: 'gdoyle-oltp-demo'
+    value: 'your_db_instance_name'
   - name: 'DATABRICKS_DATABASE_NAME'
-    value: 'gdoyle'
+    value: 'your_database_name'
   - name: 'DATABRICKS_DATABASE_PORT'
     value: '5432'
+
+  - name: 'DEFAULT_POSTGRES_SCHEMA'
+    value: 'public'
+  - name: 'DEFAULT_POSTGRES_TABLE'
+    value: 'default_table'
 
   - name: 'DB_POOL_SIZE'
     value: '5'
@@ -16,3 +21,4 @@ env:
     value: '30'
   - name: 'DB_POOL_TIMEOUT'
     value: '10'
+
