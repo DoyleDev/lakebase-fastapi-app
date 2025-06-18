@@ -26,6 +26,7 @@ Learn more about Databricks Lakebase [here](https://docs.databricks.com/aws/en/o
 ## 📋 Prerequisites
 - **Databricks Workspace**: Permissions to create apps and database instances
 - **Database Instance** [How to create a database instance](https://docs.databricks.com/aws/en/oltp/create/)
+- **Database Registered Catalog** [How to create a registered catalog/database](https://docs.databricks.com/aws/en/oltp/register-uc)
 - **Python 3.11+** and [uv package manager](https://docs.astral.sh/uv/getting-started/)
 - **Environment Variables** configured (see Configuration section)
 
@@ -47,6 +48,7 @@ Every Databricks workspace is pre-configured with example datasets. We'll be usi
    | `sync_Mode` | How often to sync | `Snapshot` |
    | `metadata_location` | Where to store metadata | `<catalog>.<schema> that you have access to` |
 
+Once the sync is complete you should see orders_synced in your postgres public schema.
 For troubleshooting or guidance see: [How to create a synced table](https://docs.databricks.com/aws/en/oltp/sync-data/sync-table)
 
 ### Local Development
@@ -54,10 +56,10 @@ For troubleshooting or guidance see: [How to create a synced table](https://docs
 1. **Clone and install dependencies:**
    ```bash
    git clone https://github.com/DoyleDev/lakebase-fastapi-app.git
-   uv pip install -r requirements.txt
-   uv add -r requirements.txt
    uv venv
    source .venv/bin/activate
+   uv pip install -r requirements.txt
+   uv add -r requirements.txt
    ```
 
 2. **Configure environment variables:**
