@@ -48,6 +48,7 @@ Every Databricks workspace is pre-configured with example datasets. We'll be usi
    | `sync_Mode` | How often to sync | `Snapshot` |
    | `metadata_location` | Where to store metadata | `<catalog>.<schema> that you have access to` |
 
+Once the sync is complete you should see orders_synced in your postgres public schema.
 For troubleshooting or guidance see: [How to create a synced table](https://docs.databricks.com/aws/en/oltp/sync-data/sync-table)
 
 ### Local Development
