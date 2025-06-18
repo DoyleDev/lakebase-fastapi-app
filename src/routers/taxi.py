@@ -15,6 +15,8 @@ from ..models.taxi import (
     TripListCursorResponse,
     TripListResponse,
     TripSample,
+    VendorUpdate,
+    VendorUpdateResponse,
 )
 from ..services.taxi_service import TaxiService, get_taxi_service
 
@@ -263,3 +265,30 @@ async def get_trips_by_cursor(
     except Exception as e:
         logger.error(f"Error getting cursor-based trips: {e}")
         raise HTTPException(status_code=500, detail="Failed to retrieve trips")
+
+
+@router.post(
+    "/{trip_id}/vendor",
+    response_model=VendorUpdateResponse,
+    summary="Update trip vendor ID",
+)
+async def update_trip_vendor(
+    trip_id: int,
+    vendor_data: VendorUpdate,
+    taxi_service: TaxiService = Depends(get_taxi_service),
+    db: AsyncSession = Depends(get_async_db),
+):
+    """
+    Update the vendor ID for a specific trip.
+
+    - **trip_id**: The ID of the trip to update
+    - **vendor_id**: The new vendor ID to assign
+    """
+    try:
+        return await taxi_service.update_vendor_id(trip_id, vendor_data.vendor_id, db)
+    except ValueError as e:
+        logger.info(f"Trip not found for update: {e}")
+        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        logger.error(f"Error updating vendor for trip {trip_id}: {e}")
+        raise HTTPException(status_code=500, detail="Failed to update vendor ID")
