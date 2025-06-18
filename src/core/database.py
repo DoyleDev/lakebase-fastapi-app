@@ -80,7 +80,9 @@ def init_engine():
 
         # Create Engine
         database_name = os.getenv("DATABRICKS_DATABASE_NAME", database_instance.name)
-        username = os.getenv("DATABRICKS_CLIENT_ID", None)
+        username = os.getenv(
+            "DATABRICKS_CLIENT_ID", os.getenv("DATABRICKS_USER_NAME", None)
+        )
 
         url = URL.create(
             drivername="postgresql+asyncpg",
