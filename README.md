@@ -21,15 +21,33 @@ Learn more about Databricks Lakebase [here](https://docs.databricks.com/aws/en/o
 - **Connection Pooling** with optimized settings for high-traffic scenarios
 - **Environment-Based Configuration** for different deployment environments
 - **Comprehensive Error Handling** and logging
+- **Immediate Example** plugs into databricks sample datasets
 
 ## 📋 Prerequisites
 - **Databricks Workspace**: Permissions to create apps and database instances
 - **Database Instance** [How to create a database instance](https://docs.databricks.com/aws/en/oltp/create/)
-- **Synced samples.tpch.ordersTable to your Database** [How to create a synced table](https://docs.databricks.com/aws/en/oltp/sync-data/sync-table)
 - **Python 3.11+** and [uv package manager](https://docs.astral.sh/uv/getting-started/)
 - **Environment Variables** configured (see Configuration section)
 
 ## 🚀 Quick Start
+
+### Configure Orders Table: 
+Every Databricks workspace is pre-configured with example datasets. We'll be using the table samples.tpch.orders as our source table.
+ 1. Navigate to samples.tpch.orders in the Catalog Explorer
+ 2. Create -> Synced Table
+ 3. In the synced table popup: 
+
+   | Field Name | Description | Example |
+   |----------|-------------|---------|
+   | `name` | Catalog.schema of where to sync your table | `my-database-instance.public` |
+   | `table_name` | target table name | `orders_synced` |
+   | `database_instance` | Target Instance | `my-database-instance` |
+   | `primary_key` | Target PK | `o_orderkey` |
+   | `timeseries_key` | Leave blank | `Blank` |
+   | `sync_Mode` | How often to sync | `Snapshot` |
+   | `metadata_location` | Where to store metadata | `<catalog>.<schema> that you have access to` |
+
+For troubleshooting or guidance see: [How to create a synced table](https://docs.databricks.com/aws/en/oltp/sync-data/sync-table)
 
 ### Local Development
 
@@ -58,12 +76,12 @@ Learn more about Databricks Lakebase [here](https://docs.databricks.com/aws/en/o
    - Interactive docs: `http://localhost:8000/docs`
 
 ### Databricks Apps Deployment
-
+   *assumes local development steps have been completed.
 1. **Databricks UI: Create Custom App:**
 
 2. **Databricks UI: App Database Instance Permissions:**
    - Copy App Service Principal Id from App -> Authorization
-   - Compute -> Database Instances -> Your Instance -> Permissions
+   - Compute -> Database Instances -> <your_instance> -> Permissions
    - Grant App Service Principal the proper permissions on your instance.
    - Grant App Service Principal permissions to the Postgres Catalog.
 
@@ -78,10 +96,9 @@ Learn more about Databricks Lakebase [here](https://docs.databricks.com/aws/en/o
    | `DATABRICKS_DATABASE_INSTANCE` | Database instance name | `my-database-instance` |
    | `DATABRICKS_DATABASE_NAME` | Database name | `database` |
    | `DATABRICKS_HOST` | Workspace URL (for apps) | `https://workspace.cloud.databricks.com` |
-   | `DATABRICKS_TOKEN` | Access token (for local apps) | `dapi...` |
-   | `DATABRICKS_CLIENT_ID` | OAuth client ID (for apps) | `app_client_id` |
+   | `DATABRICKS_DATABASE_PORT` | Postgres Port | `5432` |
    | `DEFAULT_POSTGRES_SCHEMA` | Database schema | `public` |
-   | `DEFAULT_POSTGRES_TABLE` | Table name | `nyc_train_synced` |
+   | `DEFAULT_POSTGRES_TABLE` | Table name | `orders_synced` |
 
    ### Optional Configuration
 
@@ -94,7 +111,7 @@ Learn more about Databricks Lakebase [here](https://docs.databricks.com/aws/en/o
 
 4. **Deploy app files using Databricks CLI:**
    ```bash
-   databricks sync --watch . /Workspace/Users/<your_username>/<project_folder>
+   databricks sync --watch . /Workspace/Users/<your_username>/<project_folder> # May need -p <profile_name> depending on .databrickscfg 
    ```
 5. **Databricks UI: Deploy Application:**
    - App -> Deploy
@@ -110,11 +127,9 @@ src/
 ├── core/
 │   └── database.py          # Database connection with automatic token refresh
 ├── models/
-│   └── taxi.py             # Taxi trip model using sqlModel
+│   └── orders.py           # Orders model using SQLModel
 ├── routers/
-│   └── taxi.py             # API endpoints
-├── services/
-│   └── taxi_service.py     # Business logic (optional)
+│   └── orders.py           # Orders API endpoints
 └── main.py                 # FastAPI application
 ```
 
@@ -132,40 +147,56 @@ src/
 
 | Endpoint | Method | Description |
 |----------|--------|-------------|
-| `/trips/count` | GET | Get total trip count |
-| `/trips/sample` | GET | Get 5 random trip IDs |
-| `/trips/{trip_id}` | GET | Get trip by ID |
-| `/trips/analytics` | GET | Get high level stats using services |
-| `/trips/pages` | GET | Page-based pagination (traditional) |
-| `/trips/stream` | GET | Cursor-based pagination (high performance) |
-| `/trips/vendor` | POST | Update the vendor_id of a trip |
+| `/orders/count` | GET | Get total order count |
+| `/orders/sample` | GET | Get 5 random order keys |
+| `/orders/{order_key}` | GET | Get order by key |
+| `/orders/pages` | GET | Page-based pagination (traditional) |
+| `/orders/stream` | GET | Cursor-based pagination (high performance) |
+| `/orders/{order_key}/status` | POST | Update order status |
 
 ### Example Requests
 
 ```bash
-# Get trip count
-curl http://localhost:8000/trips/count
+# Get order count
+curl http://localhost:8000/orders/count
 
-# Get specific trip
-curl http://localhost:8000/trips/123
+# Get specific order
+curl http://localhost:8000/orders/1
 
-# Get paginated trips
-curl "http://localhost:8000/trips/pages?page=1&page_size=10"
+# Get paginated orders
+curl "http://localhost:8000/orders/pages?page=1&page_size=10"
 
-# Get cursor-based trips
-curl "http://localhost:8000/trips/stream?cursor=0&page_size=10"
+# Get cursor-based orders
+curl "http://localhost:8000/orders/stream?cursor=0&page_size=10"
+
+# Update order status
+curl -X POST http://localhost:8000/orders/1/status \
+  -H "Content-Type: application/json" \
+  -d '{"o_orderstatus": "F"}'
 ```
 
 ### Response Format
 
 ```json
 {
-  "id": 123,
-  "vendor_id": "2",
-  "pickup_datetime": "2023-01-01T10:30:00",
-  "dropoff_datetime": "2023-01-01T10:45:00"
+  "o_orderkey": 1,
+  "o_custkey": 36901,
+  "o_orderstatus": "F",
+  "o_totalprice": 172799.49,
+  "o_orderdate": "1996-01-02",
+  "o_orderpriority": "5-LOW",
+  "o_clerk": "Clerk#000000951",
+  "o_shippriority": 0,
+  "o_comment": "nstructions sleep furiously among"
 }
 ```
+## 🔗 Connecting Apps
+
+### View [app-cookbook](https://apps-cookbook.dev/docs/fastapi/getting_started/connections/) to learn how to: 
+
+- **Connect Local Machine to Apps**
+- **Connect External App to Databricks App**
+- **Connect Databricks App to Databricks App**
 
 ## 🔧 Performance Tuning
 
@@ -205,7 +236,7 @@ For applications handling thousands of requests per minute:
 "Background token refresh: Token updated successfully"
 
 # Performance tracking
-"Request: GET /trips/123 - 8.3ms"
+"Request: GET /orders/1 - 8.3ms"
 ```
 
 ## 🚨 Troubleshooting
