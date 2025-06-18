@@ -9,7 +9,7 @@ from sqlalchemy.exc import OperationalError, SQLAlchemyError, TimeoutError
 from sqlmodel import SQLModel
 
 from .core.database import init_engine, start_token_refresh, stop_token_refresh
-from .routers import taxi
+from .routers import orders
 
 load_dotenv()
 
@@ -84,7 +84,7 @@ async def add_process_time_header(request: Request, call_next):
     return response
 
 
-app.include_router(taxi.router)
+app.include_router(orders.router)
 
 
 @app.get("/health", tags=["health"])
