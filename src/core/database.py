@@ -101,7 +101,7 @@ def init_engine():
             connect_args={
                 "command_timeout": int(os.getenv("DB_COMMAND_TIMEOUT", "10")),
                 "server_settings": {
-                    "application_name": "fastapi_taxi_app",
+                    "application_name": "fastapi_orders_app",
                 },
                 "ssl": "require",
             },
