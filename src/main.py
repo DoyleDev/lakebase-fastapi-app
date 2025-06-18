@@ -36,7 +36,7 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="NYC Taxi Trip API",
+    title="Lakebase Orders API",
     description="Scalable FastAPI app with multiple data domains",
     lifespan=lifespan,
 )

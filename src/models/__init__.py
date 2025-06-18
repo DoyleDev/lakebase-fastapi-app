@@ -1,5 +1,5 @@
 from sqlmodel import SQLModel
 
-from .taxi import TaxiTrip, TripAnalytics
+from .orders import Order, OrderRead
 
-__all__ = ["SQLModel", "TaxiTrip", "TripAnalytics"]
+__all__ = ["SQLModel", "Order", "OrderRead"]
