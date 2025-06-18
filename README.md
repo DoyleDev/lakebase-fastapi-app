@@ -1,6 +1,7 @@
 # 🌊 Lakebase FastAPI Databricks App.
 
 A production-ready FastAPI application for accessing Databricks Lakebase data. Features scalable architecture, automatic token refresh, and optimized database connection management.
+To learn more about Databricks Lakebase visit: https://docs.databricks.com/aws/en/oltp/ 
 
 ## ❓ Why do you need an api? 
 - **Database Abstraction & Security**:  APIs prevent direct database access and provide controlled access through authenticated apps. 
