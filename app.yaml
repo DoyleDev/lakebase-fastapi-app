@@ -11,7 +11,7 @@ env:
   - name: 'DEFAULT_POSTGRES_SCHEMA'
     value: 'public'
   - name: 'DEFAULT_POSTGRES_TABLE'
-    value: 'default_table'
+    value: 'orders_synced'
 
   - name: 'DB_POOL_SIZE'
     value: '5'
