@@ -21,4 +21,3 @@ env:
     value: '30'
   - name: 'DB_POOL_TIMEOUT'
     value: '10'
-
