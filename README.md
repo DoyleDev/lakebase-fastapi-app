@@ -84,7 +84,7 @@ For troubleshooting or guidance see: [How to create a synced table](https://docs
 2. **Databricks UI: App Database Instance Permissions:**
    - Copy App Service Principal Id from App -> Authorization
    - Compute -> Database Instances -> <your_instance> -> Permissions
-   - Grant App Service Principal the proper permissions on your instance.
+   - Add PostgreSQL Role -> enter app service principal id -> assign databricks superuser
    - Grant App Service Principal permissions to the Postgres Catalog.
 
 3. **Configure environment variables in app.yaml:**
