@@ -1,7 +1,8 @@
 # 🌊 Lakebase FastAPI Databricks App.
 
 A production-ready FastAPI application for accessing Databricks Lakebase data. Features scalable architecture, automatic token refresh, and optimized database connection management.
-To learn more about Databricks Lakebase visit: https://docs.databricks.com/aws/en/oltp/ 
+
+Learn more about Databricks Lakebase [here](https://docs.databricks.com/aws/en/oltp/)
 
 ## ❓ Why do you need an api? 
 - **Database Abstraction & Security**:  APIs prevent direct database access and provide controlled access through authenticated apps. 
@@ -23,8 +24,9 @@ To learn more about Databricks Lakebase visit: https://docs.databricks.com/aws/e
 
 ## 📋 Prerequisites
 - **Databricks Workspace**: Permissions to create apps and database instances
-- **Database Instance** configured in Databricks
-- **Python 3.11+** and uv package manager
+- **Database Instance** [How to create a database instance](https://docs.databricks.com/aws/en/oltp/create/)
+- **Synced samples.tpch.ordersTable to your Database** [How to create a synced table](https://docs.databricks.com/aws/en/oltp/sync-data/sync-table)
+- **Python 3.11+** and [uv package manager](https://docs.astral.sh/uv/getting-started/)
 - **Environment Variables** configured (see Configuration section)
 
 ## 🚀 Quick Start
@@ -100,7 +102,6 @@ To learn more about Databricks Lakebase visit: https://docs.databricks.com/aws/e
    - View logs for successful deploy: src.main - INFO - Application startup initiated
    - View your API docs: <your_app_url>/docs
 
-
 ## 🏗️ Architecture
 
 ### Project Structure
@@ -137,6 +138,7 @@ src/
 | `/trips/analytics` | GET | Get high level stats using services |
 | `/trips/pages` | GET | Page-based pagination (traditional) |
 | `/trips/stream` | GET | Cursor-based pagination (high performance) |
+| `/trips/vendor` | POST | Update the vendor_id of a trip |
 
 ### Example Requests
 
