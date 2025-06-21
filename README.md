@@ -139,9 +139,10 @@ src/
 **Important Note:** OAuth tokens expire after one hour, but expiration is enforced only at login. Open connections remain active even if the token expires. However, any PostgreSQL command that requires authentication fails if the token has expired.  Read More: https://docs.databricks.com/aws/en/oltp/oauth
 
 **Automatic Token Refresh:**
-- 50 Minute token refresh with background async task that does not impact requests.
+- 50 Minute token refresh with background async task that does not impact requests
 - Guaranteed token refresh before expiry (safe for 1-hour token lifespans)
 - Optimized for high-traffic production applications
+- Pool connections are recycled every hour preventing expired tokens on long connections
 
 ## 📚 API Documentation
 
