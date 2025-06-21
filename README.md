@@ -110,6 +110,7 @@ For troubleshooting or guidance see: [How to create a synced table](https://docs
    | `DB_MAX_OVERFLOW` | `10` | Max overflow connections |
    | `DB_POOL_TIMEOUT` | `30` | Pool checkout timeout (seconds) |
    | `DB_COMMAND_TIMEOUT` | `10` | Query timeout (seconds) |
+   | `DB_POOL_RECYCLE_INTERVAL` | `3600` | Pool Recycle Interval (seconds) |
 
 4. **Deploy app files using Databricks CLI:**
    ```bash
