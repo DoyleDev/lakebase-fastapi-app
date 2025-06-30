@@ -56,10 +56,7 @@ For troubleshooting or guidance see: [How to create a synced table](https://docs
 1. **Clone and install dependencies:**
    ```bash
    git clone https://github.com/DoyleDev/lakebase-fastapi-app.git
-   uv venv
-   source .venv/bin/activate
-   uv pip install -r requirements.txt
-   uv add -r requirements.txt
+   uv sync
    ```
 
 2. **Configure environment variables:**
