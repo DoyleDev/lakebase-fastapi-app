@@ -95,14 +95,15 @@ def init_engine():
 
         engine = create_async_engine(
             url,
-            pool_pre_ping=False,
+            pool_pre_ping=True,
             echo=False,
             pool_size=int(os.getenv("DB_POOL_SIZE", "5")),
             max_overflow=int(os.getenv("DB_MAX_OVERFLOW", "10")),
             pool_timeout=int(os.getenv("DB_POOL_TIMEOUT", "30")),
-            pool_recycle=int(
-                os.getenv("DB_POOL_RECYCLE_INTERVAL", "3600")
-            ),  # Recycle connections every hour (before token expires)
+            # OPTIONAL: Recycle connections every hour (before token expires)
+            # pool_recycle=int(
+            #     os.getenv("DB_POOL_RECYCLE_INTERVAL", "3600")
+            # ),
             connect_args={
                 "command_timeout": int(os.getenv("DB_COMMAND_TIMEOUT", "10")),
                 "server_settings": {
