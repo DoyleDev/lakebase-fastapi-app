@@ -91,3 +91,8 @@ app.include_router(orders.router)
 async def health_check():
     """Simple health check endpoint."""
     return {"status": "healthy", "timestamp": time.time()}
+
+@app.get("/", tags=["root"])
+async def home():
+    """Root endpoint to verify API is running."""
+    return {"message": "Welcome to the Lakebase API!"}
