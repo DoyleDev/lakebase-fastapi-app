@@ -2,7 +2,6 @@ import logging
 import time
 from contextlib import asynccontextmanager
 
-from dotenv import load_dotenv
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from sqlalchemy.exc import OperationalError, SQLAlchemyError, TimeoutError
@@ -10,8 +9,6 @@ from sqlmodel import SQLModel
 
 from .core.database import init_engine, start_token_refresh, stop_token_refresh
 from .routers import orders
-
-load_dotenv()
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
@@ -92,7 +89,11 @@ async def health_check():
     """Simple health check endpoint."""
     return {"status": "healthy", "timestamp": time.time()}
 
+
 @app.get("/", tags=["root"])
 async def home():
     """Root endpoint to verify API is running."""
-    return {"message": "Welcome to the Lakebase API!"}
+    return {
+        "message": """Welcome to the Lakebase API! \n
+            Add '/docs' to your URL to explore and test available endpoints."""
+    }

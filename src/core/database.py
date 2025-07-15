@@ -6,10 +6,12 @@ import uuid
 from typing import AsyncGenerator
 
 from databricks.sdk import WorkspaceClient
+from dotenv import load_dotenv
 from sqlalchemy import URL, event
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 
+load_dotenv()
 logger = logging.getLogger(__name__)
 
 # Global variables
