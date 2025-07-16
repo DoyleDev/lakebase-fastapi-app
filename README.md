@@ -1,3 +1,9 @@
+![GitHub stars](https://img.shields.io/github/stars/DoyleDev/lakebase-fastapi-app?style=social)
+![GitHub forks](https://img.shields.io/github/forks/DoyleDev/lakebase-fastapi-app?style=social)
+![GitHub issues](https://img.shields.io/github/issues/DoyleDev/lakebase-fastapi-app)
+![GitHub license](https://img.shields.io/github/license/DoyleDev/lakebase-fastapi-app)
+![GitHub last commit](https://img.shields.io/github/last-commit/DoyleDev/lakebase-fastapi-app)
+
 # 🌊 Lakebase FastAPI Databricks App.
 
 A production-ready FastAPI application for accessing Databricks Lakebase data. Features scalable architecture, automatic token refresh, and optimized database connection management.
