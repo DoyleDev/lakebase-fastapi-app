@@ -95,5 +95,5 @@ async def home():
     """Root endpoint to verify API is running."""
     return {
         "message": """Welcome to the Lakebase API! \n
-            Add '/docs' to your URL to explore and test available endpoints."""
+            Append '/docs' to the end of your URL to explore and test available endpoints."""
     }
