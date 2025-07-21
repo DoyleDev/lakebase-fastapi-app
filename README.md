@@ -1,7 +1,9 @@
+![Databricks Apps](https://img.shields.io/badge/Databricks-Apps-orange)
+[![Python](https://img.shields.io/badge/Python-3.13-3776AB.svg?style=flat&logo=python&logoColor=white)](https://www.python.org)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.115.0-009688.svg?style=flat&logo=FastAPI&logoColor=white)](https://fastapi.tiangolo.com)
 ![GitHub stars](https://img.shields.io/github/stars/DoyleDev/lakebase-fastapi-app?style=social)
 ![GitHub forks](https://img.shields.io/github/forks/DoyleDev/lakebase-fastapi-app?style=social)
 ![GitHub issues](https://img.shields.io/github/issues/DoyleDev/lakebase-fastapi-app)
-![GitHub license](https://img.shields.io/github/license/DoyleDev/lakebase-fastapi-app)
 ![GitHub last commit](https://img.shields.io/github/last-commit/DoyleDev/lakebase-fastapi-app)
 
 # 🌊 Lakebase FastAPI Databricks App.
@@ -258,6 +260,10 @@ For applications handling thousands of requests per minute:
 - Increase `DB_COMMAND_TIMEOUT` for slow queries
 - Check database instance performance
 
+## How to get help
+
+Databricks support doesn't cover this content. For questions or bugs, please open a GitHub issue and the team will help on a best effort basis.
+
 ## 📄 License
 
 &copy; 2025 Databricks, Inc. All rights reserved. The source in this notebook is provided subject to the [Databricks License](https://databricks.com/db-license-source).
@@ -269,3 +275,7 @@ For applications handling thousands of requests per minute:
 | Databricks SDK | Official Databricks SDK | Apache 2.0 | [GitHub](https://github.com/databricks/databricks-sdk-py) |
 | asyncpg | Async PostgreSQL driver | Apache 2.0 | [GitHub](https://github.com/MagicStack/asyncpg) |
 | Pydantic | Data validation using Python type hints | MIT | [GitHub](https://github.com/pydantic/pydantic) |
+
+| Dataset | Disclaimer |
+|---------|-------------|
+| TPC-H | The TPC-H Dataset is available without charge from TPC under the terms of the the [TPC End User License Agreement](https://tpc.org/TPC_Documents_Current_Versions/txt/eula.txt).
