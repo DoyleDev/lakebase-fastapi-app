@@ -1,10 +1,10 @@
 ![Databricks Apps](https://img.shields.io/badge/Databricks-Apps-orange)
 [![Python](https://img.shields.io/badge/Python-3.13-3776AB.svg?style=flat&logo=python&logoColor=white)](https://www.python.org)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115.0-009688.svg?style=flat&logo=FastAPI&logoColor=white)](https://fastapi.tiangolo.com)
-![GitHub stars](https://img.shields.io/github/stars/databricks-solutions/lakebase-fastapi-app?style=social)
-![GitHub forks](https://img.shields.io/github/forks/databricks-solutions/lakebase-fastapi-app?style=social)
-![GitHub issues](https://img.shields.io/github/issues/databricks-solutions/lakebase-fastapi-app)
-![GitHub last commit](https://img.shields.io/github/last-commit/databricks-solutions/lakebase-fastapi-app)
+![GitHub stars](https://img.shields.io/github/stars/DoyleDev/lakebase-fastapi-app?style=social)
+![GitHub forks](https://img.shields.io/github/forks/DoyleDev/lakebase-fastapi-app?style=social)
+![GitHub issues](https://img.shields.io/github/issues/DoyleDev/lakebase-fastapi-app)
+![GitHub last commit](https://img.shields.io/github/last-commit/DoyleDev/lakebase-fastapi-app)
 
 # 🌊 Lakebase FastAPI Databricks App.
 
@@ -63,7 +63,7 @@ For troubleshooting or guidance see: [How to create a synced table](https://docs
 
 1. **Clone and install dependencies:**
    ```bash
-   git clone https://github.com/databricks-solutions/lakebase-fastapi-app.git
+   git clone https://github.com/DoyleDev/lakebase-fastapi-app.git
    uv sync
    ```
 
